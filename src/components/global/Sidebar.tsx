@@ -1,10 +1,22 @@
 "use client";
 import Link from "next/link";
-import { Calendar, CalendarCheck, FolderKanban, Gauge, LogOut, UserPlus } from "lucide-react";
+import {
+  Calendar,
+  CalendarCheck,
+  FolderKanban,
+  Gauge,
+  LogOut,
+  UserPlus,
+} from "lucide-react";
 import { usePathname } from "next/navigation";
+import { signOut } from "next-auth/react";
+// import { getServerSession } from "next-auth";
+// import { authOptions } from "@/lib/auth";
 
 export default function Sidebar() {
   const pathname = usePathname();
+  // const session = getServerSession(authOptions);
+  // console.log(session);
   return (
     <aside className="border-r w-72 relative bg-primary-foreground">
       <div className="py-4 px-4 flex items-center gap-2 border-b justify-center">
@@ -38,14 +50,15 @@ export default function Sidebar() {
         >
           <UserPlus className="mr-4 size-5" /> Manajemen Akun
         </Link>
-        <Link
-          href={"/"}
-          className={`flex items-center py-2 px-3 hover:bg-accent rounded-md text-sm ${
+        <button
+          type="button"
+          onClick={() => signOut({ callbackUrl: "/" })}
+          className={`flex w-full items-center py-2 px-3 hover:bg-accent rounded-md text-sm ${
             pathname === "/" && "bg-accent"
           }`}
         >
           <LogOut className="mr-4 size-5" /> Logout
-        </Link>
+        </button>
       </nav>
       <div className="absolute bottom-4 px-4 text-sm">
         <p>&copy; Kejaksaan Tinggi Aceh</p>
