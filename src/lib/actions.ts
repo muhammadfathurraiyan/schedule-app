@@ -1,15 +1,16 @@
+"use server";
 import { redirect } from "next/navigation";
 import prisma from "./db";
 import bcrypt from "bcrypt";
-import { SignUpSchema } from "../types/zodType";
+import { SignUpSchema } from "../../types/zodType";
 
 export const createAccount = async (data: unknown) => {
   // server side validation
   const result = SignUpSchema.safeParse(data);
   if (!result.success) {
-    let errorMessage = "";
+    let errorMessage: string[] = [];
     result.error.issues.forEach((issue) => {
-      errorMessage = errorMessage + issue.message;
+      errorMessage.push(issue.message);
     });
     return { error: errorMessage };
   }
@@ -20,7 +21,7 @@ export const createAccount = async (data: unknown) => {
   });
 
   if (existingUser) {
-    return { error: "user dengan email ini sudah terdaftar." };
+    return { error: ["user dengan email ini sudah terdaftar."] };
   }
 
   // hashing password
@@ -36,5 +37,10 @@ export const createAccount = async (data: unknown) => {
     },
   });
 
+  redirect("/akun");
+};
+
+export const deleteAccount = async (id: number) => {
+  await prisma.user.delete({ where: { id: id } });
   redirect("/akun");
 };

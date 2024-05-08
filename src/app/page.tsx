@@ -1,5 +1,4 @@
 "use client";
-import Link from "next/link";
 import { Button, buttonVariants } from "@/components/ui/button";
 import {
   Card,
@@ -10,13 +9,13 @@ import {
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { SignInSchema } from "@/types/zodType";
+import { SignInSchema } from "../../types/zodType";
 import { useState } from "react";
 import { signIn } from "next-auth/react";
 import { redirect } from "next/navigation";
+import { toast } from "@/components/ui/use-toast";
 
 export default function Home() {
-  const [error, setError] = useState("");
   const clientAction = async (data: FormData) => {
     // construct new signin
     const newSignIn = {
@@ -24,20 +23,13 @@ export default function Home() {
       password: data.get("password"),
     };
 
-    console.log(newSignIn);
-
     // clientside validate
     const result = SignInSchema.safeParse(newSignIn);
     if (!result.success) {
-      let errorMessage = "";
       result.error.issues.forEach((issue) => {
-        errorMessage = errorMessage + issue.message;
+        toast({ title: "Ada kesalahan", description: issue.message });
       });
-      setError(errorMessage);
       return;
-    } else {
-      // reset error
-      setError("");
     }
 
     const signIndData = await signIn("credentials", {
@@ -47,7 +39,10 @@ export default function Home() {
     });
 
     if (signIndData?.error) {
-      setError("email atau password tidak sesuai");
+      toast({
+        title: "Ada kesalahan",
+        description: "Email atau password tidak sesuai",
+      });
     } else {
       redirect("/dashboard");
     }
@@ -63,7 +58,6 @@ export default function Home() {
         </CardHeader>
         <CardContent>
           <form action={clientAction} className="grid gap-4">
-            <p className="text-red-600">{error}</p>
             <div className="grid gap-2">
               <Label htmlFor="email">Email</Label>
               <Input
@@ -71,12 +65,19 @@ export default function Home() {
                 type="email"
                 name="email"
                 placeholder="m@example.com"
+                autoComplete="email"
                 required
               />
             </div>
             <div className="grid gap-2">
               <Label htmlFor="password">Password</Label>
-              <Input id="password" type="password" name="password" required />
+              <Input
+                id="password"
+                type="password"
+                name="password"
+                autoComplete="current-password"
+                required
+              />
             </div>
             <Button type="submit">Login</Button>
           </form>

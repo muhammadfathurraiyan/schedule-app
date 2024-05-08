@@ -9,11 +9,8 @@ export default async function page() {
     redirect("/");
   }
   return (
-    <main className="min-h-screen flex">
-      <Sidebar />
-      <section className="p-4">
-        <h1 className="font-bold text-3xl">Penjadwalan</h1>
-      </section>
-    </main>
+    <section className="pl-[19rem] py-4 pr-4">
+      <h1 className="font-bold text-3xl">Penjadwalan</h1>
+    </section>
   );
 }

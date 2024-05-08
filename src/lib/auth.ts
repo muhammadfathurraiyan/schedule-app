@@ -3,6 +3,7 @@ import { NextAuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import { prisma } from "@/lib/db";
 import bcrypt from "bcrypt";
+import Email from "next-auth/providers/email";
 
 export const authOptions: NextAuthOptions = {
   adapter: PrismaAdapter(prisma),
@@ -10,6 +11,7 @@ export const authOptions: NextAuthOptions = {
   pages: { signIn: "/" },
   session: {
     strategy: "jwt",
+    maxAge: 60 * 60,
   },
   providers: [
     CredentialsProvider({
@@ -44,7 +46,14 @@ export const authOptions: NextAuthOptions = {
     }),
   ],
   callbacks: {
-    async session({ session, user, token }) {
+    async session({ session }) {
+      const data = await prisma.user.findFirst({
+        where: { email: session.user.email },
+      });
+      if (data) {
+        session.user.role = data.role;
+        session.user.id = data.id.toString();
+      }
       return session;
     },
   },

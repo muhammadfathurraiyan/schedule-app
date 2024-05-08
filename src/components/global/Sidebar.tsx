@@ -9,22 +9,17 @@ import {
   UserPlus,
 } from "lucide-react";
 import { usePathname } from "next/navigation";
-import { signOut } from "next-auth/react";
-// import { getServerSession } from "next-auth";
-// import { authOptions } from "@/lib/auth";
+import { signOut, useSession } from "next-auth/react";
 
 export default function Sidebar() {
   const pathname = usePathname();
-  // const session = getServerSession(authOptions);
-  // console.log(session);
+  const session = useSession();
   return (
-    <aside className="border-r w-72 relative bg-primary-foreground">
-      <div className="py-4 px-4 flex items-center gap-2 border-b justify-center">
-        <CalendarCheck size={50} />
-        <h1 className="font-bold text-xl leading-none">
-          Sistem Informasi Penjadwalan
-        </h1>
-      </div>
+    <aside
+      className={`${
+        !session.data && "hidden"
+      } fixed left-0 h-[90%] flex flex-col justify-between border-r w-72 bg-primary-foreground`}
+    >
       <nav className="space-y-1 p-4">
         <Link
           href={"/dashboard"}
@@ -34,6 +29,7 @@ export default function Sidebar() {
         >
           <Gauge className="mr-4 size-5" /> Dashboard
         </Link>
+
         <Link
           href={"/penjadwalan"}
           className={`flex items-center py-2 px-3 hover:bg-accent rounded-md text-sm ${
@@ -42,14 +38,16 @@ export default function Sidebar() {
         >
           <Calendar className="mr-4 size-5" /> Penjadwalan
         </Link>
-        <Link
-          href={"/akun"}
-          className={`flex items-center py-2 px-3 hover:bg-accent rounded-md text-sm ${
-            pathname === "/akun" && "bg-accent"
-          }`}
-        >
-          <UserPlus className="mr-4 size-5" /> Manajemen Akun
-        </Link>
+        {session.data?.user.role === "super-admin" && (
+          <Link
+            href={"/akun"}
+            className={`flex items-center py-2 px-3 hover:bg-accent rounded-md text-sm ${
+              pathname === "/akun" && "bg-accent"
+            }`}
+          >
+            <UserPlus className="mr-4 size-5" /> Manajemen Akun
+          </Link>
+        )}
         <button
           type="button"
           onClick={() => signOut({ callbackUrl: "/" })}
@@ -60,7 +58,7 @@ export default function Sidebar() {
           <LogOut className="mr-4 size-5" /> Logout
         </button>
       </nav>
-      <div className="absolute bottom-4 px-4 text-sm">
+      <div className="p-4 text-sm">
         <p>&copy; Kejaksaan Tinggi Aceh</p>
       </div>
     </aside>
