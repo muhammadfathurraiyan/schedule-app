@@ -2,8 +2,6 @@
 import Link from "next/link";
 import {
   Calendar,
-  CalendarCheck,
-  FolderKanban,
   Gauge,
   LogOut,
   UserPlus,

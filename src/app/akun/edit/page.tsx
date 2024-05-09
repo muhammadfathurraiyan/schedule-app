@@ -12,10 +12,10 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { redirect, useSearchParams } from "next/navigation";
-import { SignUpSchema } from "../../../../types/zodType";
+import { UpdateAccountSchema } from "../../../../types/zodType";
 import { toast } from "@/components/ui/use-toast";
 import { useSession } from "next-auth/react";
-import { createAccount } from "@/lib/actions";
+import { createAccount, updateAccount } from "@/lib/actions";
 
 export default function page() {
   const session = useSession();
@@ -28,24 +28,18 @@ export default function page() {
     role: searchParams.get("role"),
   };
 
-  if (!session.data) {
-    redirect("/");
-  }
-
-  if (session.data.user.role !== "super-admin") {
+  if (session.data?.user.role !== "super-admin") {
     redirect("/dashboard");
   }
 
-  const createAction = async (data: FormData) => {
+  const editAction = async (data: FormData) => {
     const newEditUser = {
       name: data.get("name"),
-      email: data.get("email"),
-      password: data.get("password"),
-      confirmPassword: data.get("confirmPassword"),
       role: data.get("role"),
+      password: data.get("password"),
     };
 
-    const result = SignUpSchema.safeParse(newEditUser);
+    const result = UpdateAccountSchema.safeParse(newEditUser);
     if (!result.success) {
       result.error.issues.forEach((issue) => {
         toast({ title: "Ada kesalahan", description: issue.message });
@@ -53,7 +47,7 @@ export default function page() {
       return;
     }
 
-    const response = await createAccount(result.data);
+    const response = await updateAccount(result.data, parseInt(user.id!));
     if (response.error.length > 0) {
       response.error.map((err) => {
         toast({ title: "Ada kesalahan", description: err });
@@ -63,9 +57,9 @@ export default function page() {
 
   return (
     <section className="pl-[19rem] py-4 pr-4">
-      <h1 className="font-bold text-3xl capitalize">Tambah Akun</h1>
+      <h1 className="font-bold text-3xl capitalize">Edit Akun</h1>
       <div className="w-2/5 space-y-2 mt-4">
-        <form action={createAction} className="grid gap-4">
+        <form action={editAction} className="grid gap-4">
           <div className="grid gap-2">
             <Label htmlFor="email">Nama</Label>
             <Input
@@ -87,7 +81,7 @@ export default function page() {
               placeholder="m@example.com"
               autoComplete="email"
               defaultValue={user.email ?? ""}
-              required
+              readOnly
             />
           </div>
           <div className="grid gap-2">
@@ -97,7 +91,6 @@ export default function page() {
               type="password"
               name="password"
               autoComplete="current-password"
-              required
             />
           </div>
           <div className="grid gap-2">
@@ -117,7 +110,7 @@ export default function page() {
           </div>
           <div className="flex justify-end">
             <Button type="submit" className="w-fit">
-              Tambah
+              Edit
             </Button>
           </div>
         </form>

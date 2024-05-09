@@ -63,7 +63,7 @@ const invoices = [
 export function TableAkun({ users }: { users: User[] }) {
   return (
     <Table>
-      <TableCaption>A list of your recent invoices.</TableCaption>
+      <TableCaption>List tabel admin dan super admin.</TableCaption>
       <TableHeader className="bg-primary-foreground">
         <TableRow>
           <TableHead className="w-[50px]">No</TableHead>

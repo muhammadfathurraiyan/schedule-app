@@ -12,7 +12,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { redirect } from "next/navigation";
-import { SignUpSchema } from "../../../../types/zodType";
+import { CreateAccountSchema } from "../../../../types/zodType";
 import { toast } from "@/components/ui/use-toast";
 import { useSession } from "next-auth/react";
 import { createAccount } from "@/lib/actions";
@@ -37,7 +37,7 @@ export default function page() {
       role: data.get("role"),
     };
 
-    const result = SignUpSchema.safeParse(newUser);
+    const result = CreateAccountSchema.safeParse(newUser);
     if (!result.success) {
       result.error.issues.forEach((issue) => {
         toast({ title: "Ada kesalahan", description: issue.message });
