@@ -10,12 +10,16 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { SignInSchema } from "../../types/zodType";
-import { useState } from "react";
-import { signIn } from "next-auth/react";
+import { signIn, useSession } from "next-auth/react";
 import { redirect } from "next/navigation";
 import { toast } from "@/components/ui/use-toast";
 
 export default function Home() {
+  const session = useSession();
+  if (session.status === "authenticated") {
+    redirect("/dashboard");
+  }
+  
   const clientAction = async (data: FormData) => {
     // construct new signin
     const newSignIn = {

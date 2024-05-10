@@ -72,4 +72,5 @@ export const ScheduleSchema = z.object({
     .min(1, { message: "keterangan tidak boleh kosong." })
     .max(30, { message: "keterangan terlalu panjang." })
     .optional(),
+  status: z.string().optional(),
 });

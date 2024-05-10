@@ -20,12 +20,8 @@ import { createAccount } from "@/lib/actions";
 export default function page() {
   const session = useSession();
 
-  if (!session.data) {
-    redirect("/");
-  }
-
-  if (session.data.user.role !== "super-admin") {
-    redirect("/dashboard");
+  if (session.status === "loading") {
+    redirect("/akun");
   }
 
   const createAction = async (data: FormData) => {

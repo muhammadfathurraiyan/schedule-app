@@ -2,7 +2,7 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { redirect } from "next/navigation";
+import { redirect, useSearchParams } from "next/navigation";
 import { ScheduleSchema } from "../../../../types/zodType";
 import { toast } from "@/components/ui/use-toast";
 import { useSession } from "next-auth/react";
@@ -16,16 +16,40 @@ import { Calendar } from "@/components/ui/calendar";
 import { format } from "date-fns";
 import { useState } from "react";
 import { id } from "date-fns/locale";
-import { createSchedule } from "@/lib/actions";
+import { updateSchedule } from "@/lib/actions";
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectLabel,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 export default function page() {
   const session = useSession();
+  const searchParams = useSearchParams();
+
+  const jadwal = {
+    id: searchParams.get("id"),
+    instansi: searchParams.get("instansi"),
+    peserta: searchParams.get("peserta"),
+    waktu: searchParams.get("waktu"),
+    tempat: searchParams.get("tempat"),
+    materi: searchParams.get("materi"),
+    jumlahPeserta: searchParams.get("jumlahPeserta"),
+    keterangan: searchParams.get("keterangan"),
+    status: searchParams.get("status"),
+  };
 
   if (session.status === "loading") {
     redirect("/penjadwalan");
   }
 
-  const [date, setDate] = useState<Date>();
+  const [date, setDate] = useState<Date | undefined>(
+    new Date(jadwal.waktu ?? "")
+  );
 
   const createAction = async (data: FormData) => {
     const newSchedul = {
@@ -36,6 +60,10 @@ export default function page() {
       materi: data.get("materi"),
       jumlahPeserta: data.get("jumlahPeserta"),
       keterangan: data.get("keterangan"),
+      status:
+        session.data?.user.role === "super-admin"
+          ? data.get("status")
+          : jadwal.status,
     };
 
     const result = ScheduleSchema.safeParse(newSchedul);
@@ -46,16 +74,17 @@ export default function page() {
       return;
     }
 
-    const response = await createSchedule(result.data);
+    const response = await updateSchedule(result.data, parseInt(jadwal.id!));
     if (response.error.length > 0) {
       response.error.map((err) => {
         toast({ title: "Ada kesalahan", description: err });
       });
     }
   };
+
   return (
     <section className="pl-[19rem] py-4 pr-4">
-      <h1 className="font-bold text-3xl capitalize">Tambah Jadwal</h1>
+      <h1 className="font-bold text-3xl capitalize">Edit Jadwal</h1>
       <div className="w-2/3 space-y-2 mt-4">
         <form action={createAction} className="space-y-4">
           <div className="grid grid-flow-col gap-4">
@@ -66,8 +95,9 @@ export default function page() {
                   id="instansi"
                   type="text"
                   name="instansi"
-                  placeholder="Instansi"
                   autoComplete="instansi"
+                  placeholder="Instansi"
+                  defaultValue={jadwal.instansi ?? ""}
                   required
                 />
               </div>
@@ -79,6 +109,7 @@ export default function page() {
                   name="peserta"
                   placeholder="Mahasiswa"
                   autoComplete="peserta"
+                  defaultValue={jadwal.peserta ?? ""}
                   required
                 />
               </div>
@@ -88,8 +119,9 @@ export default function page() {
                   id="tempat"
                   type="text"
                   name="tempat"
-                  placeholder="Aceh Besar"
                   autoComplete="tempat"
+                  placeholder="Aceh Besar"
+                  defaultValue={jadwal.tempat ?? ""}
                   required
                 />
               </div>
@@ -130,8 +162,9 @@ export default function page() {
                   id="materi"
                   type="text"
                   name="materi"
-                  placeholder="Materi"
                   autoComplete="materi"
+                  placeholder="Materi"
+                  defaultValue={jadwal.materi ?? ""}
                   required
                 />
               </div>
@@ -141,8 +174,9 @@ export default function page() {
                   id="jumlahPeserta"
                   type="text"
                   name="jumlahPeserta"
-                  placeholder="100"
                   autoComplete="jumlahPeserta"
+                  placeholder="100"
+                  defaultValue={jadwal.jumlahPeserta ?? ""}
                   required
                 />
               </div>
@@ -154,14 +188,35 @@ export default function page() {
                   name="keterangan"
                   placeholder="Keterangan"
                   autoComplete="keterangan"
+                  defaultValue={jadwal.keterangan ?? ""}
                   required
                 />
+              </div>
+              <div className="grid gap-2">
+                <Label htmlFor="status">Status</Label>
+                <Select
+                  name="status"
+                  disabled={session.data?.user.role === "admin" ? true : false}
+                  defaultValue={jadwal.status ?? ""}
+                >
+                  <SelectTrigger>
+                    <SelectValue id="status" placeholder="Pilih status" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectGroup>
+                      <SelectLabel>Status</SelectLabel>
+                      <SelectItem value="Pending">Pending</SelectItem>
+                      <SelectItem value="di terima">Terima</SelectItem>
+                      <SelectItem value="di tolak">Tolak</SelectItem>
+                    </SelectGroup>
+                  </SelectContent>
+                </Select>
               </div>
             </div>
           </div>
           <div className="flex justify-end">
             <Button type="submit" className="w-fit">
-              Tambah
+              Edit
             </Button>
           </div>
         </form>

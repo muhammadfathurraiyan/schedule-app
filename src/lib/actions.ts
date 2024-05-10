@@ -113,3 +113,29 @@ export const createSchedule = async (data: unknown) => {
 
   redirect("/penjadwalan");
 };
+
+export const updateSchedule = async (data: unknown, id: number) => {
+  // server side validation
+  const result = ScheduleSchema.safeParse(data);
+  if (!result.success) {
+    let errorMessage: string[] = [];
+    result.error.issues.forEach((issue) => {
+      errorMessage.push(issue.message);
+    });
+    return { error: errorMessage };
+  }
+
+  await prisma.schedule.update({
+    data: {
+      ...result.data,
+    },
+    where: { id: id },
+  });
+
+  redirect("/penjadwalan");
+};
+
+export const deleteSchedule = async (id: number) => {
+  await prisma.schedule.delete({ where: { id: id } });
+  redirect("/penjadwalan");
+};

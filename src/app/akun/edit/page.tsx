@@ -28,8 +28,8 @@ export default function page() {
     role: searchParams.get("role"),
   };
 
-  if (session.data?.user.role !== "super-admin") {
-    redirect("/dashboard");
+  if (session.status === "loading") {
+    redirect("/akun");
   }
 
   const editAction = async (data: FormData) => {

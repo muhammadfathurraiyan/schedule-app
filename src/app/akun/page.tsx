@@ -17,7 +17,7 @@ export default async function page() {
     redirect("/dashboard");
   }
 
-  const users = await prisma.user.findMany();
+  const users = await prisma.user.findMany({ orderBy: { id: "asc" } });
   return (
     <>
       <section className="pl-[19rem] py-4 pr-4">

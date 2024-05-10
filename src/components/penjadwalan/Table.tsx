@@ -14,6 +14,8 @@ import { PencilLine } from "lucide-react";
 import Link from "next/link";
 import { format } from "date-fns";
 import { id } from "date-fns/locale";
+import { AlertDelete } from "./AlertDelete";
+import Detail from "./Detail";
 
 export function TablePenjadwalan({ jadwal }: { jadwal?: Schedule[] }) {
   return (
@@ -36,25 +38,30 @@ export function TablePenjadwalan({ jadwal }: { jadwal?: Schedule[] }) {
         {jadwal?.map((jadwal, index) => (
           <TableRow key={jadwal.id}>
             <TableCell className="text-center">{index + 1}</TableCell>
-            <TableCell>{jadwal.instansi}</TableCell>
-            <TableCell>{jadwal.peserta}</TableCell>
-            <TableCell>{`${format(jadwal.waktu, "PPP", { locale: id })} ${
-              jadwal.tempat
-            }`}</TableCell>
-            <TableCell>{jadwal.materi}</TableCell>
-            <TableCell>{jadwal.jumlahPeserta}</TableCell>
-            <TableCell>{jadwal.keterangan}</TableCell>
-            <TableCell>{jadwal.status}</TableCell>
+            <TableCell className="capitalize">{jadwal.instansi}</TableCell>
+            <TableCell className="capitalize">{jadwal.peserta}</TableCell>
+            <TableCell className="capitalize">{`${format(jadwal.waktu, "PPP", {
+              locale: id,
+            })} ${jadwal.tempat}`}</TableCell>
+            <TableCell className="capitalize">{jadwal.materi}</TableCell>
+            <TableCell className="capitalize">{jadwal.jumlahPeserta}</TableCell>
+            <TableCell className="capitalize">{jadwal.keterangan}</TableCell>
+            <TableCell className="capitalize">{jadwal.status}</TableCell>
             <TableCell className="text-center grid grid-flow-col">
-              {/* <Detail jadwal={jadwal} /> */}
-              {/* <Link
+              <Detail jadwal={jadwal} />
+              <Link
                 href={{
-                  pathname: `/akun/edit`,
+                  pathname: `/penjadwalan/edit`,
                   query: {
                     id: jadwal.id,
-                    name: jadwal.name,
-                    email: jadwal.email,
-                    role: jadwal.role,
+                    instansi: jadwal.instansi,
+                    peserta: jadwal.peserta,
+                    waktu: jadwal.waktu.toString(),
+                    tempat: jadwal.tempat,
+                    materi: jadwal.materi,
+                    jumlahPeserta: jadwal.jumlahPeserta,
+                    keterangan: jadwal.keterangan,
+                    status: jadwal.status,
                   },
                 }}
                 className={buttonVariants({
@@ -64,8 +71,8 @@ export function TablePenjadwalan({ jadwal }: { jadwal?: Schedule[] }) {
                 })}
               >
                 <PencilLine size={22} />
-              </Link> */}
-              {/* <AlertDelete jadwal={jadwal} /> */}
+              </Link>
+              <AlertDelete jadwal={jadwal} />
             </TableCell>
           </TableRow>
         ))}
