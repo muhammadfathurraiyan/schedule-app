@@ -8,7 +8,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Schedule } from "@prisma/client";
+import { Schedule, User } from "@prisma/client";
 import { buttonVariants } from "../ui/button";
 import { PencilLine } from "lucide-react";
 import Link from "next/link";
@@ -17,7 +17,11 @@ import { id } from "date-fns/locale";
 import { AlertDelete } from "./AlertDelete";
 import Detail from "./Detail";
 
-export function TablePenjadwalan({ jadwal }: { jadwal?: Schedule[] }) {
+export function TablePenjadwalan({
+  jadwal,
+}: {
+  jadwal?: (Schedule & { user: User | null })[];
+}) {
   return (
     <Table>
       <TableCaption>List penjadwalan kegiatan.</TableCaption>
@@ -25,6 +29,7 @@ export function TablePenjadwalan({ jadwal }: { jadwal?: Schedule[] }) {
         <TableRow>
           <TableHead className="w-[50px]">No</TableHead>
           <TableHead>Instansi</TableHead>
+          <TableHead>Oleh</TableHead>
           <TableHead>Peserta</TableHead>
           <TableHead>Jadwal</TableHead>
           <TableHead>Materi</TableHead>
@@ -39,6 +44,7 @@ export function TablePenjadwalan({ jadwal }: { jadwal?: Schedule[] }) {
           <TableRow key={jadwal.id}>
             <TableCell className="text-center">{index + 1}</TableCell>
             <TableCell className="capitalize">{jadwal.instansi}</TableCell>
+            <TableCell className="capitalize">{jadwal.user?.name}</TableCell>
             <TableCell className="capitalize">{jadwal.peserta}</TableCell>
             <TableCell className="capitalize">{`${format(jadwal.waktu, "PPP", {
               locale: id,
@@ -79,7 +85,7 @@ export function TablePenjadwalan({ jadwal }: { jadwal?: Schedule[] }) {
       </TableBody>
       <TableFooter>
         <TableRow>
-          <TableCell colSpan={9}>Total: {jadwal?.length}</TableCell>
+          <TableCell colSpan={10}>Total: {jadwal?.length}</TableCell>
         </TableRow>
       </TableFooter>
     </Table>

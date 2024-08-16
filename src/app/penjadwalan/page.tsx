@@ -2,7 +2,6 @@ import { TablePenjadwalan } from "@/components/penjadwalan/Table";
 import { buttonVariants } from "@/components/ui/button";
 import { authOptions } from "@/lib/auth";
 import prisma from "@/lib/db";
-import { Schedule } from "@prisma/client";
 import { getServerSession } from "next-auth";
 import Link from "next/link";
 import { redirect } from "next/navigation";
@@ -12,8 +11,11 @@ export default async function page() {
   if (!session) {
     redirect("/");
   }
-  if (session.user.role === "super-admin") {
-    const jadwal = await prisma.schedule.findMany({ orderBy: { id: "desc" } });
+  if (session.user.role === "super-admin" || session.user.role === "kepala-ruang") {
+    const jadwal = await prisma.schedule.findMany({
+      orderBy: { id: "desc" },
+      include: { user: true },
+    });
     return (
       <section className="pl-[19rem] py-4 pr-4">
         <h1 className="font-bold text-3xl">Penjadwalan</h1>
@@ -26,9 +28,10 @@ export default async function page() {
       </section>
     );
   }
-  
+
   const jadwal = await prisma.schedule.findMany({
     where: { userId: +session.user.id },
+    include: { user: true },
   });
   return (
     <section className="pl-[19rem] py-4 pr-4">

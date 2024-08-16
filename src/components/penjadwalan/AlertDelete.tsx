@@ -9,7 +9,7 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
-import { Button } from "@/components/ui/button";
+import { Button, buttonVariants } from "@/components/ui/button";
 import { deleteSchedule } from "@/lib/actions";
 import { Schedule, User } from "@prisma/client";
 import { Trash } from "lucide-react";
@@ -42,9 +42,14 @@ export function AlertDelete({ jadwal }: { jadwal: Schedule }) {
           <AlertDialogCancel>Batal</AlertDialogCancel>
           <form action={deleteClientAction}>
             <input type="hidden" name="id" value={jadwal.id} />
-            <Button type="submit" variant={"destructive"}>
-              Hapus
-            </Button>
+            <AlertDialogAction
+              className={buttonVariants({ variant: "destructive" })}
+              asChild
+            >
+              <Button type="submit" variant={"destructive"}>
+                Hapus
+              </Button>
+            </AlertDialogAction>
           </form>
         </AlertDialogFooter>
       </AlertDialogContent>

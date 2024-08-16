@@ -16,7 +16,7 @@ export default function Sidebar() {
     <aside
       className={`${
         !session.data && "hidden"
-      } fixed left-0 h-[90%] flex flex-col justify-between border-r w-72 bg-primary-foreground`}
+      } fixed left-0 h-[92%] flex flex-col justify-between border-r w-72 bg-primary-foreground`}
     >
       <nav className="space-y-1 p-4">
         <Link

@@ -103,6 +103,17 @@ export const createSchedule = async (data: unknown) => {
     return { error: errorMessage };
   }
 
+  // valdasi jika jadwal telah ada
+  const existingSchedule = await prisma.schedule.findFirst({
+    where: {
+      waktu: result.data.waktu,
+    },
+  });
+
+  if (existingSchedule) {
+    return { error: ["Jadwal bentrok, silahkan ubah jadwal yang lain."] };
+  }
+
   // create schecule
   await prisma.schedule.create({
     data: {
@@ -123,6 +134,17 @@ export const updateSchedule = async (data: unknown, id: number) => {
       errorMessage.push(issue.message);
     });
     return { error: errorMessage };
+  }
+
+  // valdasi jika jadwal telah ada
+  const existingSchedule = await prisma.schedule.findFirst({
+    where: {
+      waktu: result.data.waktu,
+    },
+  });
+
+  if (existingSchedule) {
+    return { error: ["Jadwal bentrok, silahkan ubah jadwal yang lain."] };
   }
 
   await prisma.schedule.update({

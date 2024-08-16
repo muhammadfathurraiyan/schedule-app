@@ -5,6 +5,7 @@ import NextAuthProvider from "@/components/global/NextAuthProvider";
 import Header from "@/components/global/Header";
 import Sidebar from "@/components/global/Sidebar";
 import { Toaster } from "@/components/ui/toaster";
+import prisma from "@/lib/db";
 
 const inter = Inter({ subsets: ["latin"] });
 

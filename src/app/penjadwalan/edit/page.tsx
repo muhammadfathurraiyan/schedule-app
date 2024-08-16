@@ -51,7 +51,7 @@ export default function page() {
     new Date(jadwal.waktu ?? "")
   );
 
-  const createAction = async (data: FormData) => {
+  const editAction = async (data: FormData) => {
     const newSchedul = {
       instansi: data.get("instansi"),
       peserta: data.get("peserta"),
@@ -61,7 +61,8 @@ export default function page() {
       jumlahPeserta: data.get("jumlahPeserta"),
       keterangan: data.get("keterangan"),
       status:
-        session.data?.user.role === "super-admin"
+        session.data?.user.role === "super-admin" ||
+        session.data?.user.role === "kepala-ruang"
           ? data.get("status")
           : jadwal.status,
     };
@@ -69,7 +70,11 @@ export default function page() {
     const result = ScheduleSchema.safeParse(newSchedul);
     if (!result.success) {
       result.error.issues.forEach((issue) => {
-        toast({ title: "Ada kesalahan", description: issue.message });
+        toast({
+          title: "Ada kesalahan",
+          description: issue.message,
+          variant: "destructive",
+        });
       });
       return;
     }
@@ -77,7 +82,11 @@ export default function page() {
     const response = await updateSchedule(result.data, parseInt(jadwal.id!));
     if (response.error.length > 0) {
       response.error.map((err) => {
-        toast({ title: "Ada kesalahan", description: err });
+        toast({
+          title: "Ada kesalahan",
+          description: err,
+          variant: "destructive",
+        });
       });
     }
   };
@@ -86,7 +95,7 @@ export default function page() {
     <section className="pl-[19rem] py-4 pr-4">
       <h1 className="font-bold text-3xl capitalize">Edit Jadwal</h1>
       <div className="w-2/3 space-y-2 mt-4">
-        <form action={createAction} className="space-y-4">
+        <form action={editAction} className="space-y-4">
           <div className="grid grid-flow-col gap-4">
             <div className="space-y-4">
               <div className="grid gap-2">

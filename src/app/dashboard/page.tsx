@@ -10,7 +10,7 @@ export default async function page() {
     redirect("/");
   }
 
-  const jadwal = await prisma.schedule.findMany({ orderBy: { id: "desc" } });
+  const jadwal = await prisma.schedule.findMany({ orderBy: { id: "desc" }, where: {status: "di terima"} });
   return (
     <section className="pl-[19rem] py-4 pr-4">
       <h1 className="font-bold text-3xl">Dashboard</h1>

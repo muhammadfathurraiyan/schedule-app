@@ -79,7 +79,7 @@ export function TableAkun({ users }: { users: User[] }) {
             <TableCell className="text-center">{index + 1}</TableCell>
             <TableCell>{user.name}</TableCell>
             <TableCell>{user.email}</TableCell>
-            <TableCell>{user.role}</TableCell>
+            <TableCell>{user.role === "admin" ? "user" : user.role}</TableCell>
             <TableCell className="text-center grid grid-flow-col">
               <Detail user={user} />
               <Link

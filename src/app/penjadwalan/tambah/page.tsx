@@ -41,7 +41,11 @@ export default function page() {
     const result = ScheduleSchema.safeParse(newSchedul);
     if (!result.success) {
       result.error.issues.forEach((issue) => {
-        toast({ title: "Ada kesalahan", description: issue.message });
+        toast({
+          title: "Ada kesalahan",
+          description: issue.message,
+          variant: "destructive",
+        });
       });
       return;
     }
@@ -49,7 +53,11 @@ export default function page() {
     const response = await createSchedule(result.data);
     if (response.error.length > 0) {
       response.error.map((err) => {
-        toast({ title: "Ada kesalahan", description: err });
+        toast({
+          title: "Ada kesalahan",
+          description: err,
+          variant: "destructive",
+        });
       });
     }
   };
