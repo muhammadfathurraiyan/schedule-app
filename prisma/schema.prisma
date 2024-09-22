@@ -28,7 +28,7 @@ model Schedule {
   materi        String
   jumlahPeserta String
   keterangan    String?
-  status        String   @default("Pending")
+  status        String   @default("di tolak")
   user          User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
   userId        Int?
 }
