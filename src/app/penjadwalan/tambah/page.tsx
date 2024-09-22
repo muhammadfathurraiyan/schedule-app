@@ -25,7 +25,7 @@ export default function page() {
     redirect("/penjadwalan");
   }
 
-  const [date, setDate] = useState<Date>();
+  const [date, setDate] = useState<Date | undefined>(new Date());
 
   const createAction = async (data: FormData) => {
     const newSchedul = {
@@ -125,6 +125,7 @@ export default function page() {
                       mode="single"
                       selected={date}
                       onSelect={setDate}
+                      today={date}
                       initialFocus
                     />
                   </PopoverContent>

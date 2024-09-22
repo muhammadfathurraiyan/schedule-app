@@ -113,8 +113,7 @@ export default function page() {
               <SelectContent>
                 <SelectGroup>
                   <SelectLabel>Role</SelectLabel>
-                  <SelectItem value="admin">user</SelectItem>
-                  <SelectItem value="kepala-ruang">kepala-ruang</SelectItem>
+                  <SelectItem value="admin">user/karyawan</SelectItem>
                   <SelectItem value="super-admin">super-admin</SelectItem>
                 </SelectGroup>
               </SelectContent>

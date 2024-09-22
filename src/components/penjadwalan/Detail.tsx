@@ -18,6 +18,11 @@ import { Calendar } from "../ui/calendar";
 import { id } from "date-fns/locale";
 
 export default function Detail({ jadwal }: { jadwal: Schedule }) {
+  const status: { [key: string]: string } = {
+    Pending: "Yang Akan Dilaksanakan",
+    "di terima": "Yang Sudah Dilaksanakan",
+    "di tolak": "Yang Belum Dilaksanakan",
+  };
   return (
     <Dialog>
       <DialogTrigger asChild>
@@ -104,7 +109,7 @@ export default function Detail({ jadwal }: { jadwal: Schedule }) {
                 name="status"
                 placeholder="status"
                 autoComplete="status"
-                defaultValue={jadwal.status ?? ""}
+                defaultValue={status[jadwal.status] ?? ""}
                 readOnly
               />
             </div>
@@ -128,6 +133,7 @@ export default function Detail({ jadwal }: { jadwal: Schedule }) {
                 locale={id}
                 mode="single"
                 selected={jadwal.waktu}
+                today={jadwal.waktu}
                 className="rounded-md border"
               />
             </div>

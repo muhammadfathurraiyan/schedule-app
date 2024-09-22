@@ -22,6 +22,25 @@ export function TablePenjadwalan({
 }: {
   jadwal?: (Schedule & { user: User | null })[];
 }) {
+  const status: { [key: string]: string } = {
+    "di terima": "Yang Sudah Dilaksanakan",
+    Pending: "Yang Akan Dilaksanakan",
+    "di tolak": "Yang Belum Dilaksanakan",
+  };
+  const background: { [key: string]: string } = {
+    Pending: "bg-yellow-500 hover:bg-yellow-600/50",
+    "di terima": "bg-green-500 hover:bg-green-500/50",
+    "di tolak": "bg-red-500 hover:bg-red-500/50",
+  };
+
+  const data = [];
+
+  for (const prop in status) {
+    for (let i = 0; i < jadwal!.length; i++) {
+      if (jadwal![i].status === prop) data.push(jadwal![i]);
+    }
+  }
+
   return (
     <Table>
       <TableCaption>List penjadwalan kegiatan.</TableCaption>
@@ -40,8 +59,11 @@ export function TablePenjadwalan({
         </TableRow>
       </TableHeader>
       <TableBody>
-        {jadwal?.map((jadwal, index) => (
-          <TableRow key={jadwal.id}>
+        {data?.map((jadwal, index) => (
+          <TableRow
+            key={jadwal.id}
+            className={`${background[jadwal?.status]}`}
+          >
             <TableCell className="text-center">{index + 1}</TableCell>
             <TableCell className="capitalize">{jadwal.instansi}</TableCell>
             <TableCell className="capitalize">{jadwal.user?.name}</TableCell>
@@ -52,7 +74,9 @@ export function TablePenjadwalan({
             <TableCell className="capitalize">{jadwal.materi}</TableCell>
             <TableCell className="capitalize">{jadwal.jumlahPeserta}</TableCell>
             <TableCell className="capitalize">{jadwal.keterangan}</TableCell>
-            <TableCell className="capitalize">{jadwal.status}</TableCell>
+            <TableCell className="capitalize">
+              {status[jadwal.status]}
+            </TableCell>
             <TableCell className="text-center grid grid-flow-col">
               <Detail jadwal={jadwal} />
               <Link

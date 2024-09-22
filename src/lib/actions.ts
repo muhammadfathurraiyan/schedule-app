@@ -136,6 +136,8 @@ export const updateSchedule = async (data: unknown, id: number) => {
     return { error: errorMessage };
   }
 
+  const session = await getServerSession(authOptions);
+
   // valdasi jika jadwal telah ada
   const existingSchedule = await prisma.schedule.findFirst({
     where: {
@@ -143,7 +145,14 @@ export const updateSchedule = async (data: unknown, id: number) => {
     },
   });
 
-  if (existingSchedule) {
+  const mySchedule = await prisma.schedule.findFirst({
+    where: {
+      userId: +session!.user.id,
+      waktu: result.data.waktu,
+    },
+  });
+
+  if (!mySchedule && existingSchedule && session?.user.role !== "super-admin") {
     return { error: ["Jadwal bentrok, silahkan ubah jadwal yang lain."] };
   }
 

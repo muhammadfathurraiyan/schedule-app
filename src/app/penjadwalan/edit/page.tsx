@@ -158,6 +158,7 @@ export default function page() {
                       mode="single"
                       selected={date}
                       onSelect={setDate}
+                      today={date}
                       initialFocus
                     />
                   </PopoverContent>
@@ -214,9 +215,9 @@ export default function page() {
                   <SelectContent>
                     <SelectGroup>
                       <SelectLabel>Status</SelectLabel>
-                      <SelectItem value="Pending">Pending</SelectItem>
-                      <SelectItem value="di terima">Terima</SelectItem>
-                      <SelectItem value="di tolak">Tolak</SelectItem>
+                      <SelectItem value="Pending">Yang Akan Dilaksanakan</SelectItem>
+                      <SelectItem value="di terima">Yang Sudah Dilaksanakan</SelectItem>
+                      <SelectItem value="di tolak">Yang Belum Dilaksanakan</SelectItem>
                     </SelectGroup>
                   </SelectContent>
                 </Select>

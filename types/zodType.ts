@@ -59,10 +59,7 @@ export const ScheduleSchema = z.object({
     .min(1, { message: "nama tempat tidak boleh kosong." })
     .max(30, { message: "nama tempat terlalu panjang." }),
   waktu: z.date(),
-  materi: z
-    .string()
-    .min(1, { message: "judul materi tidak boleh kosong." })
-    .max(30, { message: "judul materi terlalu panjang." }),
+  materi: z.string().min(1, { message: "judul materi tidak boleh kosong." }),
   jumlahPeserta: z
     .string()
     .min(1, { message: "total peserta tidak boleh kosong." })

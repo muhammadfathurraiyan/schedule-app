@@ -9,61 +9,16 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { User } from "@prisma/client";
-import { Button, buttonVariants } from "../ui/button";
-import { Eye, PencilLine, Trash } from "lucide-react";
-import Detail from "./Detail";
-import { AlertDelete } from "./AlertDelete";
+import { PencilLine } from "lucide-react";
 import Link from "next/link";
-
-const invoices = [
-  {
-    invoice: "1",
-    paymentStatus: "Paid",
-    totalAmount: "$250.00",
-    paymentMethod: "Credit Card",
-  },
-  {
-    invoice: "1",
-    paymentStatus: "Pending",
-    totalAmount: "$150.00",
-    paymentMethod: "PayPal",
-  },
-  {
-    invoice: "1",
-    paymentStatus: "Unpaid",
-    totalAmount: "$350.00",
-    paymentMethod: "Bank Transfer",
-  },
-  {
-    invoice: "1",
-    paymentStatus: "Paid",
-    totalAmount: "$450.00",
-    paymentMethod: "Credit Card",
-  },
-  {
-    invoice: "1",
-    paymentStatus: "Paid",
-    totalAmount: "$550.00",
-    paymentMethod: "PayPal",
-  },
-  {
-    invoice: "1",
-    paymentStatus: "Pending",
-    totalAmount: "$200.00",
-    paymentMethod: "Bank Transfer",
-  },
-  {
-    invoice: "1",
-    paymentStatus: "Unpaid",
-    totalAmount: "$300.00",
-    paymentMethod: "Credit Card",
-  },
-];
+import { buttonVariants } from "../ui/button";
+import { AlertDelete } from "./AlertDelete";
+import Detail from "./Detail";
 
 export function TableAkun({ users }: { users: User[] }) {
   return (
     <Table>
-      <TableCaption>List tabel admin dan super admin.</TableCaption>
+      <TableCaption>List tabel admin/karyawan dan super admin.</TableCaption>
       <TableHeader className="bg-primary-foreground">
         <TableRow>
           <TableHead className="w-[50px]">No</TableHead>
@@ -79,7 +34,7 @@ export function TableAkun({ users }: { users: User[] }) {
             <TableCell className="text-center">{index + 1}</TableCell>
             <TableCell>{user.name}</TableCell>
             <TableCell>{user.email}</TableCell>
-            <TableCell>{user.role === "admin" ? "user" : user.role}</TableCell>
+            <TableCell>{user.role === "admin" ? "user/karyawan" : user.role}</TableCell>
             <TableCell className="text-center grid grid-flow-col">
               <Detail user={user} />
               <Link

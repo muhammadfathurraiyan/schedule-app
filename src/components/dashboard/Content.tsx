@@ -23,12 +23,26 @@ import {
 } from "../ui/table";
 import { format } from "date-fns";
 import { id } from "date-fns/locale";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Separator } from "../ui/separator";
 import { Calendar } from "../ui/calendar";
 
 export default function Content({ jadwal }: { jadwal: Schedule[] }) {
   const [detail, setDetail] = useState<Schedule>();
+  const [isSelected, setIsSelected] = useState(false);
+  const handleSelected = (jadwal: Schedule) => {
+    setDetail(jadwal);
+    setIsSelected(false);
+    setTimeout(() => {
+      setIsSelected(true);
+    });
+  };
+
+  const status: { [key: string]: string } = {
+    Pending: "Yang Akan Dilaksanakan",
+    "di terima": "Yang Sudah Dilaksanakan",
+    "di tolak": "Yang Belum Dilaksanakan",
+  };
   return (
     <div className="mt-4 grid grid-cols-6 gap-4">
       <div className="col-span-4 grid grid-cols-3 gap-4 h-fit">
@@ -102,7 +116,9 @@ export default function Content({ jadwal }: { jadwal: Schedule[] }) {
                     <TableCell className="text-center grid grid-flow-col">
                       <Button
                         type="button"
-                        onClick={() => setDetail(jadwal)}
+                        onClick={() => {
+                          handleSelected(jadwal);
+                        }}
                         variant={"link"}
                       >
                         Detail
@@ -120,16 +136,16 @@ export default function Content({ jadwal }: { jadwal: Schedule[] }) {
           </CardContent>
         </Card>
       </div>
-      {detail && (
+      {isSelected && (
         <div className="col-span-2">
           <Card className="overflow-hidden">
             <CardHeader className="flex flex-row items-start bg-muted/50">
               <div className="grid gap-0.5">
                 <CardTitle className="group flex items-center gap-2 text-lg">
-                  Kegiatan: {detail.materi}
+                  Kegiatan: {detail?.materi}
                 </CardTitle>
                 <CardDescription>
-                  Tanggal: {format(detail.waktu, "PPP", { locale: id })}
+                  Tanggal: {format(detail!.waktu, "PPP", { locale: id })}
                 </CardDescription>
               </div>
             </CardHeader>
@@ -140,6 +156,7 @@ export default function Content({ jadwal }: { jadwal: Schedule[] }) {
                   locale={id}
                   mode="single"
                   selected={detail?.waktu}
+                  today={detail?.waktu}
                   className="rounded-md border"
                 />
                 <Separator className="my-4" />
@@ -169,7 +186,7 @@ export default function Content({ jadwal }: { jadwal: Schedule[] }) {
                   </li>
                   <li className="flex items-center justify-between">
                     <span className="text-muted-foreground">Status</span>
-                    <span>{detail?.status}</span>
+                    <span>{status[detail!.status]}</span>
                   </li>
                   <li className="flex items-center justify-between">
                     <span className="text-muted-foreground">Keterangan</span>
