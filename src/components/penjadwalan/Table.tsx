@@ -23,9 +23,9 @@ export function TablePenjadwalan({
   jadwal?: (Schedule & { user: User | null })[];
 }) {
   const status: { [key: string]: string } = {
-    "di terima": "Yang Sudah Dilaksanakan",
-    Pending: "Yang Akan Dilaksanakan",
-    "di tolak": "Yang Belum Dilaksanakan",
+    "di terima": "Sudah Dilaksanakan",
+    Pending: "Akan Dilaksanakan",
+    "di tolak": "Belum Dilaksanakan",
   };
   const background: { [key: string]: string } = {
     Pending: "bg-yellow-500 hover:bg-yellow-600/50",
@@ -60,10 +60,7 @@ export function TablePenjadwalan({
       </TableHeader>
       <TableBody>
         {data?.map((jadwal, index) => (
-          <TableRow
-            key={jadwal.id}
-            className={`${background[jadwal?.status]}`}
-          >
+          <TableRow key={jadwal.id} className={`${background[jadwal?.status]}`}>
             <TableCell className="text-center">{index + 1}</TableCell>
             <TableCell className="capitalize">{jadwal.instansi}</TableCell>
             <TableCell className="capitalize">{jadwal.user?.name}</TableCell>

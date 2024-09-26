@@ -215,9 +215,9 @@ export default function page() {
                   <SelectContent>
                     <SelectGroup>
                       <SelectLabel>Status</SelectLabel>
-                      <SelectItem value="Pending">Yang Akan Dilaksanakan</SelectItem>
-                      <SelectItem value="di terima">Yang Sudah Dilaksanakan</SelectItem>
-                      <SelectItem value="di tolak">Yang Belum Dilaksanakan</SelectItem>
+                      <SelectItem value="Pending">Akan Dilaksanakan</SelectItem>
+                      <SelectItem value="di terima">Sudah Dilaksanakan</SelectItem>
+                      <SelectItem value="di tolak">Belum Dilaksanakan</SelectItem>
                     </SelectGroup>
                   </SelectContent>
                 </Select>
